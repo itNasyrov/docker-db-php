@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  db:
+    build: ./db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    command: mysqld --innodb-flush-method=littlesync --innodb-use-native-aio=OFF --log_bin=ON
+    volumes:
+      - ./db/database/mysql:/var/lib/mysql
+
+  adminer:
+    build: ./adminer
+    restart: always
+    ports:
+    - 9090:8080
+
+  php:
+    build:
+      context: ./php
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+    depends_on:
+      - db
+    volumes:
+      - ./src:/var/www/html
+
+  apache:
+    build:
+      context: ./apache
+      args:
+        APACHE_VERSION: ${APACHE_VERSION}
+    depends_on:
+      - php
+    ports:
+      - 6080:80
