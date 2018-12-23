@@ -1,4 +1,4 @@
-# docker-db-php-example
+# docker-db-php
 
     This repository for demonstration of start of the project on php, mysql, apache in docker
 
